@@ -4,16 +4,16 @@ import android.content.Context
 import android.content.res.AssetManager
 import android.content.res.Resources
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.nhaarman.mockitokotlin2.whenever
+import com.rabobank.csvreader.model.IssueDetail
+import com.rabobank.csvreader.utils.CSVParser
 import com.rabobank.csvreader.utils.CommonUtils
-import org.hamcrest.CoreMatchers.nullValue
+import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.Assert
-import org.junit.Assert.assertThat
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
-import org.mockito.AdditionalMatchers.not
 import org.mockito.Mock
 import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.mock
@@ -37,6 +37,12 @@ class CSVParserTest {
     @Mock
     private lateinit var assetManager: AssetManager
 
+    @Mock
+    private lateinit var csvParser1: CSVParser
+
+    @Mock
+    private lateinit var issueDetail: IssueDetail
+
 
     /**
     This method will run before all tests.
@@ -47,10 +53,12 @@ class CSVParserTest {
         we will initialize all mocked elements with this function.
          */
         MockitoAnnotations.initMocks(this)
-        doReturn(assetManager).`when`(applicationContext).getAssets()
-        /*applicationContext = mock(Context::class.java)
+        doReturn(assetManager).`when`(applicationContext).assets
+        applicationContext = mock(Context::class.java)
         customResources = mock(Resources::class.java)
-        assetManager = mock(AssetManager::class.java)*/
+        assetManager = mock(AssetManager::class.java)
+        csvParser1 = mock(CSVParser::class.java)
+        issueDetail = mock(IssueDetail::class.java)
     }
 
     @Test
@@ -63,8 +71,60 @@ class CSVParserTest {
     @Test
     @Throws(Exception::class)
     fun test_play_once() {
+//        val `in` = this.javaClass.classLoader!!.getResourceAsStream("issues.csv")
 //        assertThat(applicationContext.assets.open("issues.csv"), not(nullValue()))))
         Assert.assertNull(applicationContext.assets.open("issues.csv"))
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun readCSVFileFromAssetFolderToCheckTheSuccessResponseIsComing() {
+        var issuesList = createMockIssueList()
+
+        //Given
+        val inputStream = this.javaClass.classLoader!!.getResourceAsStream("issues.csv")
+        whenever(csvParser1.parse(inputStream)).thenReturn(issuesList)
+
+        //when
+        csvParser1.parse(inputStream)
+
+        //then
+        assertThat(inputStream, notNullValue())
+        assertThat(issuesList, notNullValue())
+        Assert.assertTrue(issuesList.size == 4)
+    }
+
+
+    @Test
+    @Throws(Exception::class)
+    fun readCSVFileFromAssetFolderToCheckTheSuccessEmptyListResponseIsComing() {
+
+        val emptyIssuesList = ArrayList<IssueDetail>()
+
+        //Given
+        val inputStream = this.javaClass.classLoader!!.getResourceAsStream("issues.csv")
+        whenever(csvParser1.parse(inputStream)).thenReturn(emptyIssuesList)
+
+        //when
+        csvParser1.parse(inputStream)
+
+        //then
+        assertThat(inputStream, notNullValue())
+        assertTrue(emptyIssuesList.isEmpty())
+        assertTrue(emptyIssuesList.size == 0)
+    }
+
+
+    private fun createMockIssueList(): ArrayList<IssueDetail> {
+        var issuesList = ArrayList<IssueDetail>()
+
+        issuesList.add(IssueDetail("John", "Micheal", "10", "1978-01-02T00:00:00"))
+        issuesList.add(IssueDetail("Ramesh", "Micheal", "10", "1978-01-02T00:00:00"))
+        issuesList.add(IssueDetail("Micheal", "Micheal", "10", "1978-01-02T00:00:00"))
+        issuesList.add(IssueDetail("Albert", "Micheal", "10", "1978-01-02T00:00:00"))
+
+        return issuesList
+    }
+
 
 }

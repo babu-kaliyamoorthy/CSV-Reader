@@ -14,19 +14,21 @@ import com.rabobank.csvreader.base.CoroutinesContextProvider
 import com.rabobank.csvreader.databinding.ActivityIssueListBinding
 import com.rabobank.csvreader.model.IssueDetail
 import com.rabobank.csvreader.model.IssuesListRepository
+import com.rabobank.csvreader.utils.CSVParser
+import com.rabobank.csvreader.utils.CommonUtils
 import com.rabobank.csvreader.viewmodel.IssuesListViewModel
 import com.rabobank.csvreader.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.activity_issue_list.*
 
+const val CSV_FILE_NAME = "issues.csv"
 
 /**
  * Created by Babu Kaliyamoorthy on 23/11/19.
  */
 class IssuesListActivity : AppCompatActivity() {
-
     private lateinit var issuesListViewModel: IssuesListViewModel
-    private lateinit var layoutManager: RecyclerView.LayoutManager
 
+    private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var issueListAdapter: IssueListAdapter
     private lateinit var binding: ActivityIssueListBinding
 
@@ -50,9 +52,12 @@ class IssuesListActivity : AppCompatActivity() {
      * This method is used for initializing view model and call view model method for parsing.
      */
     private fun setupViewModel() {
+        var inputStream =
+            CommonUtils.getInputStreamFromFile(CommonUtils.getApplicationContext(), CSV_FILE_NAME)
+
         issuesListViewModel = ViewModelProviders.of(
             this, ViewModelFactory(
-                IssuesListRepository(),
+                IssuesListRepository(CSVParser(), inputStream),
                 CoroutinesContextProvider()
             )
         )

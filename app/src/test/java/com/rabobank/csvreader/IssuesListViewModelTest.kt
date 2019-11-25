@@ -52,7 +52,7 @@ class IssuesListViewModelTest {
          */
         MockitoAnnotations.initMocks(this)
         initializeObservers()
-        createMockIssueList()
+
 
         issuesListViewModel = IssuesListViewModel(issueDataSource, TestContextProvider()).apply {
             getStateLiveData().observeForever(viewStateObserver)
@@ -65,10 +65,14 @@ class IssuesListViewModelTest {
 
     @Test
     fun issuesParsingEmptyListResponse() = testCoroutineRule.runBlockingTest {
-
+        //Given
         val emptyIssuesList = ArrayList<IssueDetail>()
         whenever(issueDataSource.fetchIssuesList()).thenReturn(emptyIssuesList)
+
+        //when
         issuesListViewModel.fetchIssuesListDataFromFile()
+
+        //then
         verify(viewStateObserver).onChanged(IssuesListViewState.IsParsingInProgress)
         verify(viewStateObserver).onChanged(IssuesListViewState.Success(emptyIssuesList))
         Assert.assertNotNull(issuesListViewModel.isFetchInProgress.value)
@@ -80,9 +84,14 @@ class IssuesListViewModelTest {
 
     @Test
     fun issuesParsingSuccessFulResponse() = testCoroutineRule.runBlockingTest {
-
+        //Given
+        createMockIssueList()
         whenever(issueDataSource.fetchIssuesList()).thenReturn(issuesList)
+
+        //when
         issuesListViewModel.fetchIssuesListDataFromFile()
+
+        //then
         verify(viewStateObserver).onChanged(IssuesListViewState.IsParsingInProgress)
         verify(viewStateObserver).onChanged(IssuesListViewState.Success(issuesList))
 
@@ -95,9 +104,14 @@ class IssuesListViewModelTest {
     @Test
     fun issuesParsingFailedResponse() =
         testCoroutineRule.runBlockingTest {
+            //Given
             val error = Error()
             whenever(issueDataSource.fetchIssuesList()).thenThrow(error)
+
+            //when
             issuesListViewModel.fetchIssuesListDataFromFile()
+
+            //then
             verify(viewStateObserver).onChanged(IssuesListViewState.IsParsingInProgress)
             Assert.assertNotNull(issuesListViewModel.isFetchInProgress.value)
             Assert.assertNull(issuesListViewModel.isEmptyList.value)
@@ -116,9 +130,9 @@ class IssuesListViewModelTest {
     private fun createMockIssueList() {
         issuesList = ArrayList()
         issuesList.add(IssueDetail("John", "Micheal", "10", "1978-01-02T00:00:00"))
-        issuesList.add(IssueDetail("John", "Micheal", "10", "1978-01-02T00:00:00"))
-        issuesList.add(IssueDetail("John", "Micheal", "10", "1978-01-02T00:00:00"))
-        issuesList.add(IssueDetail("John", "Micheal", "10", "1978-01-02T00:00:00"))
+        issuesList.add(IssueDetail("Ramesh", "Micheal", "10", "1978-01-02T00:00:00"))
+        issuesList.add(IssueDetail("Micheal", "Micheal", "10", "1978-01-02T00:00:00"))
+        issuesList.add(IssueDetail("Albert", "Micheal", "10", "1978-01-02T00:00:00"))
     }
 
 }
