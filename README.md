@@ -5,7 +5,7 @@ This repository contains a detailed sample app that implements MVVM architecture
 View , Model and DataBinding .
 
 <br/>1.CSV Reader App parse the CSV(comma separated Values) files from application's assets folder.
-<br/>2.This app is designed to handle CSV files which has different number of row and columns.
+<br/>2.This app is designed to handle CSV files which has different number of rows and columns.
 <br/>3.App is designed using MVVM pattern and Android architecture components ViewModel, LiveData and DataBinding.
 <br/>4.Developed App in Kotlin with Coroutines API.
 <br/>5.App supports both portrait and landscape modes.
