@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">CSV Reader</string>
+    <string name="recycler_view_empty_list_message">CSV file contains zero records!</string>
+    <string name="parsing_error_message">Unable to parse the File.Something went wrong!</string>
+</resources>
