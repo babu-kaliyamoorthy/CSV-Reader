@@ -7,10 +7,9 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.whenever
 import com.rabobank.csvreader.model.IssueDetail
 import com.rabobank.csvreader.utils.CSVParser
-import com.rabobank.csvreader.utils.CommonUtils
 import org.hamcrest.CoreMatchers.notNullValue
-import org.junit.Assert
-import org.junit.Assert.*
+import org.junit.Assert.assertThat
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -49,7 +48,7 @@ class CSVParserTest {
      */
     @Before
     fun setUp() {
-        /*
+        /**
         we will initialize all mocked elements with this function.
          */
         MockitoAnnotations.initMocks(this)
@@ -59,21 +58,6 @@ class CSVParserTest {
         assetManager = mock(AssetManager::class.java)
         csvParser1 = mock(CSVParser::class.java)
         issueDetail = mock(IssueDetail::class.java)
-    }
-
-    @Test
-    fun parseCSVFileFromAssetSuccessResponse() {
-        CommonUtils.getInputStreamFromFile(applicationContext, "issues.csv")
-        //TODO
-
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun test_play_once() {
-//        val `in` = this.javaClass.classLoader!!.getResourceAsStream("issues.csv")
-//        assertThat(applicationContext.assets.open("issues.csv"), not(nullValue()))))
-        Assert.assertNull(applicationContext.assets.open("issues.csv"))
     }
 
     @Test
@@ -91,7 +75,7 @@ class CSVParserTest {
         //then
         assertThat(inputStream, notNullValue())
         assertThat(issuesList, notNullValue())
-        Assert.assertTrue(issuesList.size == 4)
+        assertTrue(issuesList.size == 4)
     }
 
 

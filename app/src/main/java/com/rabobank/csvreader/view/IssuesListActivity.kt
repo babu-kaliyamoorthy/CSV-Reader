@@ -2,6 +2,7 @@ package com.rabobank.csvreader.view
 
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -27,7 +28,6 @@ const val CSV_FILE_NAME = "issues.csv"
  */
 class IssuesListActivity : AppCompatActivity() {
     private lateinit var issuesListViewModel: IssuesListViewModel
-
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var issueListAdapter: IssueListAdapter
     private lateinit var binding: ActivityIssueListBinding
@@ -41,8 +41,8 @@ class IssuesListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_issue_list)
 
-        setupViewModel()
-        setupUI()
+        initializeIssuesListViewModel()
+        initializeIssueListAdapter()
         binding.issueListsViewModel = issuesListViewModel
         binding.lifecycleOwner = this
 
@@ -51,7 +51,8 @@ class IssuesListActivity : AppCompatActivity() {
     /**
      * This method is used for initializing view model and call view model method for parsing.
      */
-    private fun setupViewModel() {
+    private fun initializeIssuesListViewModel() {
+        Log.d(TAG, "initializeIssuesListViewModel method called")
         var inputStream =
             CommonUtils.getInputStreamFromFile(CommonUtils.getApplicationContext(), CSV_FILE_NAME)
 
@@ -70,19 +71,20 @@ class IssuesListActivity : AppCompatActivity() {
     /**
      * This method is used to do a normal static set up for recyclerview and adapter.
      */
-    private fun setupUI() {
+    private fun initializeIssueListAdapter() {
+        Log.d(TAG, "initializeIssueListAdapter method called")
         layoutManager = LinearLayoutManager(this)
         recycler_view.layoutManager = layoutManager
         issueListAdapter =
             IssueListAdapter(this, issuesListViewModel.issuesList.value ?: emptyList())
         recycler_view.adapter = issueListAdapter
-
     }
 
     /**
      * This method is used for calling view model method to do parsing and return as list .
      */
     private fun getIssueList() {
+        Log.d(TAG, "get issues List method called")
         if (issuesListViewModel != null && issuesListViewModel.issuesList.value?.size == 0) {
             issuesListViewModel.fetchIssuesListDataFromFile()
         }
